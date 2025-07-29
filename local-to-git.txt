@@ -1,1 +1,59 @@
-##prerquisites
+## Prerequisites
+
+- Git: Download and install Git from https://git-scm.com/downloads
+
+## Initial Setup for Git
+
+1. Set your Git global configuration (do this once):
+
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+git config --global init.defaultBranch main   # sets default branch as 'main' instead of 'master'
+
+2. Generate SSH key pair (if you don't already have one):
+
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+> Note: When prompted for a passphrase, leave it empty (press Enter)
+
+3. Copy your public SSH key to clipboard:
+
+cat ~/.ssh/id_ed25519.pub
+
+Copy all the output text.
+
+4. Start the SSH agent and add your private key:
+
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+5. Add your SSH public key to GitHub:
+
+- Go to GitHub > Settings > SSH and GPG keys
+- Click New SSH key
+- Give it a descriptive title (e.g., "My Laptop SSH Key")
+- Paste the copied SSH key into the key field and save.
+
+## Transferring a Project from Local to GitHub Repo
+
+Step 1: Create a new repository on GitHub.
+- Do NOT initialize it with a README.md or .gitignore file to avoid merge conflicts.
+
+Step 2: Prepare your local project folder:
+- Create .gitignore, README.md, and add your project files as needed.
+
+Step 3: Open Git Bash or terminal inside your project folder and run:
+
+git init                                    # Initialize local git repo
+git remote add origin <ssh-repo-url>       # Add your GitHub repo SSH URL as remote origin
+git add .                                   # Stage all files for commit
+git commit -m "Your commit message here"   # Commit files with a meaningful message
+git push -u origin main                     # Push your commits to GitHub main branch
+
+### Notes:
+
+- Replace <ssh-repo-url> with your GitHub repo SSH link, e.g.,  
+  git@github.com:username/repository.git
+- The -u flag on push sets the upstream so later you can just run git push.
+- For subsequent commits, just run git add, git commit, and git push commands.
+- Ensure your SSH key is properly added to GitHub to avoid authentication issues.
